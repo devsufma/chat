@@ -12,11 +12,15 @@ io.on('connection', function(socket){
   });
 
   socket.on('disconnect', function(){
-    console.log('user disconnected');
+    console.log("");
+  });
+
+  socket.on('exit', function(username, room){
+    console.log(username  + " is disconnected.");
   });
 
   socket.on('chat message', function(username, msg, room){
-    console.log('message: ' + msg);
+    console.log(username + ' > ' + msg);
   });
 
   socket.on('chat message', function(username, msg, room){

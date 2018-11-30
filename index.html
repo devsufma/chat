@@ -44,7 +44,7 @@
         <div class="nav-wrapper green">
           <a href="#" class="brand-logo">Bate Papo</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href=""><i class="material-icons right">exit_to_app</i>+2 minutos</a></li>
+            <li><a href=""><i class="material-icons right">exit_to_app</i>+10 segundos</a></li>
             <li><a id="btnExit" href=""><i class="material-icons right">exit_to_app</i>Sair</a></li>
           </ul>
         </div>
@@ -63,7 +63,7 @@
 
     <script>
       $(function () {
-        if(sessionStorage.getItem("logging")) {
+        if(sessionStorage.getItem("logging") == "true") {
           var socket = io();
 
           socket.emit('connection', sessionStorage.getItem("username"), sessionStorage.getItem("room"));
@@ -74,8 +74,19 @@
             return false;
           });
 
+          $("#btnExit").click(function(){
+            socket.emit('exit', sessionStorage.getItem("username"), sessionStorage.getItem("room"));
+            $('#m').val('');
+            sessionStorage.setItem("username", "");
+            sessionStorage.setItem("room", "");
+            sessionStorage.setItem("logging", "false");
+
+            window.location.replace("http://127.0.0.1:3000");
+
+          });
+
           socket.on('chat message', function(username, msg, room){
-            $('#messages').append($('<li>').text(msg));
+            $('#messages').append($('<li>').text(username +" > " + msg));
           });
 
 
@@ -84,7 +95,7 @@
     </script>
 
     <script type="text/javascript">
-      if(sessionStorage.getItem("logging")) {
+      if(sessionStorage.getItem("logging") == "true") {
         var loginMenu = document.getElementById("login-menu");
         loginMenu.style.display = "None";
       } else {
