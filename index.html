@@ -44,7 +44,7 @@
         <div class="nav-wrapper green">
           <a href="#" class="brand-logo">Bate Papo</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href=""><i class="material-icons right">exit_to_app</i>+10 segundos</a></li>
+            <li><a id="btnExitAfter10sec"><i class="material-icons right">exit_to_app</i>+10 segundos</a></li>
             <li><a id="btnExit" href=""><i class="material-icons right">exit_to_app</i>Sair</a></li>
           </ul>
         </div>
@@ -74,7 +74,7 @@
             return false;
           });
 
-          $("#btnExit").click(function(){
+          function exit() {
             socket.emit('exit', sessionStorage.getItem("username"), sessionStorage.getItem("room"));
             $('#m').val('');
             sessionStorage.setItem("username", "");
@@ -82,6 +82,19 @@
             sessionStorage.setItem("logging", "false");
 
             window.location.replace("http://127.0.0.1:3000");
+          }
+
+          $("#btnExit").click(function(){
+            exit();
+
+          });
+
+          $("#btnExitAfter10sec").click(function(){
+            setTimeout(function() {
+              exit();
+            }, 3000);
+
+            //exit();
 
           });
 
