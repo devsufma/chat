@@ -1,39 +1,116 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="pt-br">
   <head>
-    <title>Socket.IO chat</title>
+    <title>Bate Papo</title>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Import socket.io.js -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Import jquery-1.11.1.js -->
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #bottom-menu { background-color: white; position: fixed; bottom: 0; width: 100%;}
+      #messages {list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+      #messages li:nth-child(odd) { background-color: gray; }
     </style>
+
   </head>
 
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <section id="login-menu">
+      <div class="container">
+        <h2>Entrar</h2>
+        <input type="text" id="username" placeholder="Entre com o nome">
+        <input type="text" id="room" placeholder="Entre com o nome da sala">
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+        <a id="btnLogin" class="waves-effect waves-light btn green">Entrar</a>
+      </div>
+    </section>
+
+    <section id="chat">
+      <!-- nav menu -->
+      <nav>
+        <div class="nav-wrapper green">
+          <a href="#" class="brand-logo">Bate Papo</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href=""><i class="material-icons right">exit_to_app</i>+2 minutos</a></li>
+            <li><a id="btnExit" href=""><i class="material-icons right">exit_to_app</i>Sair</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <ul id="messages"></ul>
+        <div id="bottom-menu" class="row">
+          <div class="col s11 m11 l11">
+            <input id="m" autocomplete="off" />
+          </div>
+          <div class="col s1 m1 l1">
+            <a id="btnSend" class="waves-effect waves-light btn green">Enviar</a>
+          </div>
+        </div>
+    </section>
+
     <script>
       $(function () {
-        var socket = io();
-        $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
-        });
+        if(sessionStorage.getItem("logging")) {
+          var socket = io();
+
+          socket.emit('connection', sessionStorage.getItem("username"), sessionStorage.getItem("room"));
+
+          $("#btnSend").click(function(){
+            socket.emit('chat message', sessionStorage.getItem("username"), $('#m').val(), sessionStorage.getItem("room"));
+            $('#m').val('');
+            return false;
+          });
+
+          socket.on('chat message', function(username, msg, room){
+            $('#messages').append($('<li>').text(msg));
+          });
+
+
+        }
       });
+    </script>
+
+    <script type="text/javascript">
+      if(sessionStorage.getItem("logging")) {
+        var loginMenu = document.getElementById("login-menu");
+        loginMenu.style.display = "None";
+      } else {
+        var chat = document.getElementById("chat");
+        chat.style.display = "None";
+      }
+
+      var btnLogin = document.getElementById("btnLogin");
+
+      btnLogin.addEventListener("click", function(event) {
+        var username = document.getElementById("username").value;
+        var room = document.getElementById("room").value;
+
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("room", room);
+        sessionStorage.setItem("logging", true);
+
+        var loginMenu = document.getElementById("login-menu");
+        var chat = document.getElementById("chat");
+
+        loginMenu.style.display = "None";
+        chat.style.display = "block";
+
+        window.location.replace("http://127.0.0.1:3000");
+      });
+
     </script>
   </body>
 </html>

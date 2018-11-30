@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chat</title>
+</head>
+<body>
+  <section id="login-menu">
+    <h2>Entrada</h2>
+    <input type="text" id="name" placeholder="Entre com o nome">
+    <input type="text" id="room" placeholder="Entre com o nome da sala">
+
+    <button id="btnLogin">Entrar</button>
+  </section>
+
+  <section id="chat" style="display:None">
+  chat
+  </section>
+
+  <script type="text/javascript">
+    var btnLogin = document.getElementById("btnLogin");
+
+    btnLogin.addEventListener("click", function(event) {
+      var name = document.getElementById("name").value;
+      var room = document.getElementById("room").value;
+
+      console.log(name);
+
+      var loginMenu = document.getElementById("login-menu");
+      var chat = document.getElementById("chat");
+
+      loginMenu.style.display = "None";
+      chat.style.display = "block";
+    });
+
+  </script>
+</body>
+</html>
