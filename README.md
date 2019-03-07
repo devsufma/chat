@@ -1,2 +1,2 @@
 # chat
-chat module in Node.JS
+Sistema de comunicação usando Node.JS para conclusão de Redes de Computadores
